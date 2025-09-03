@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Butterflies → Pixies</title>
+  <style>
+    :root {
+      --sky-top: #0b1b3a;
+      --sky-mid: #142b5a;
+      --sky-bottom: #1f3b77;
+      --pixie: #fff7d6;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      background: radial-gradient(1200px 600px at 70% -10%, #2a4aa5 0%, transparent 60%),
+                  linear-gradient(to bottom, var(--sky-top), var(--sky-mid) 40%, var(--sky-bottom));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+      position: relative;
+    }
+
+    /* Subtle star twinkles */
+    .twinkles, .twinkles::before, .twinkles::after {
+      position: absolute; inset: 0; content: ""; pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 10% 20%, #ffffff88 48%, transparent 52%),
+        radial-gradient(1.5px 1.5px at 30% 60%, #ffffff66 48%, transparent 52%),
+        radial-gradient(1.5px 1.5px at 55% 25%, #ffffff99 48%, transparent 52%),
+        radial-gradient(2px 2px at 78% 40%, #ffffffaa 48%, transparent 52%),
+        radial-gradient(1.5px 1.5px at 85% 80%, #ffffff66 48%, transparent 52%),
+        radial-gradient(1.5px 1.5px at 15% 85%, #ffffff66 48%, transparent 52%);
+      animation: twinkle 6s ease-in-out infinite;
+    }
+    .twinkles::before { animation-duration: 8s; opacity: .6 }
+    .twinkles::after { animation-duration: 10s; opacity: .4 }
+    @keyframes twinkle { 0%,100%{opacity:.8} 50%{opacity:.2} }
+
+    /* Butterfly */
+    .butterfly {
+      position: absolute;
+      width: 46px; height: 38px;
+      transform-origin: center;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.35));
+    }
+
+    /* Body */
+    .butterfly .body {
+      position: absolute;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 10px; height: 30px; border-radius: 12px;
+      background: linear-gradient(#2b1a25, #42283b);
+    }
+
+    /* Antennae */
+    .butterfly .antenna::before,
+    .butterfly .antenna::after {
+      content: ""; position: absolute; left: 50%; top: 6px;
+      width: 14px; height: 14px; border-top: 2px solid #2b1a25;
+      border-right: 2px solid transparent; border-left: 2px solid transparent;
+      border-bottom: 2px solid transparent; border-radius: 50%;
+      transform-origin: left bottom; opacity: .9;
+    }
+    .butterfly .antenna::before { transform: translateX(-8px) rotate(-35deg); }
+    .butterfly .antenna::after  { transform: translateX(-6px) rotate(215deg); }
+
+    /* Wings */
+    .butterfly .wing {
+      position: absolute; top: 50%; width: 28px; height: 24px;
+      border-radius: 70% 40% 65% 40% / 70% 50% 60% 45%;
+      background: radial-gradient(circle at 30% 35%, #ffd6f9 0 30%, #f2a8ff 30% 60%, #8d54f6 60% 100%);
+      box-shadow: inset 0 0 10px #fff6, 0 0 8px #bda8ff88;
+      filter: saturate(1.2);
+    }
+    .butterfly .wing.left  { left: 14px; transform-origin: right center; }
+    .butterfly .wing.right { right: 14px; transform-origin: left  center; }
+
+    /* Flapping animation */
+    .butterfly .wing { animation: flap 380ms ease-in-out infinite; }
+    .butterfly .wing.right { animation-delay: 90ms; }
+    @keyframes flap {
+      0%,100% { transform: rotateY(0deg) rotateZ(0deg) scale(1); }
+      50%     { transform: rotateY(55deg) rotateZ(-3deg) scale(1.03); }
+    }
+
+    /* Pixie particles */
+    .pixie {
+      position: absolute; width: 6px; height: 6px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, var(--pixie), #ffe7a8 60%, #f7c66f 70%, transparent 72%);
+      box-shadow: 0 0 10px 2px #fff6, 0 0 18px 4px #ffd77f40;
+      pointer-events: none;
+      opacity: 0.95;
+      transform: translate(-50%, -50%) translate(0,0) scale(1);
+      animation: explode 800ms cubic-bezier(.17,.67,.17,1) forwards,
+                 sparkle 1200ms linear infinite;
+      --dx: 0px; --dy: 0px; --rz: 0deg; --delay: 0ms;
+      animation-delay: var(--delay), var(--delay);
+    }
+    @keyframes explode {
+      0%   { transform: translate(-50%, -50%) translate(0,0) scale(0.7) rotate(0deg); opacity: 1; }
+      80%  { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(1.15) rotate(var(--rz)); opacity: .95; }
+      100% { transform: translate(-50%, -50%) translate(calc(var(--dx) * 1.15), calc(var(--dy) * 1.15)) scale(0.2) rotate(var(--rz)); opacity: 0; }
+    }
+    @keyframes sparkle {
+      0%,100% { filter: brightness(1) blur(0px); }
+      50%     { filter: brightness(1.4) blur(.4px); }
+    }
+
+    /* Tap hint (mobile) */
+    .hint {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      color: #e9efff; font-size: 14px; letter-spacing: .3px; opacity: .8;
+      background: #0b1538aa; padding: 6px 10px; border-radius: 999px;
+      border: 1px solid #ffffff22; box-shadow: 0 3px 12px #0005;
+    }
+  </style>
+</head>
+<body>
+  <div class="twinkles"></div>
+  <div class="hint">Click (or tap) a butterfly ✨</div>
+
+  <script>
+    // Configuration
+    const BUTTERFLY_COUNT = Math.min(16, Math.floor((window.innerWidth * window.innerHeight) / 42000) + 8);
+    const PIXIES_PER_BURST = 26;
+
+    const butterflies = [];
+    let vw = window.innerWidth, vh = window.innerHeight;
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function makeButterfly() {
+      const el = document.createElement('div');
+      el.className = 'butterfly';
+      el.innerHTML = `
+        <div class="antenna"></div>
+        <div class="wing left"></div>
+        <div class="wing right"></div>
+        <div class="body"></div>
+      `;
+      document.body.appendChild(el);
+
+      // Randomized flight profile
+      const speed   = rand(0.6, 1.6);      // px per frame base
+      const amp     = rand(18, 60);        // sine amplitude
+      const phase   = rand(0, Math.PI*2);  
+      const yMid    = rand(60, vh - 80);
+      const tiltAmt = rand(6, 14);         // degrees
+
+      const b = { el, x: rand(-vw, vw*0.8), yMid, speed, amp, phase, tiltAmt };
+      el.style.transform = `translate(${b.x}px, ${yMid}px)`;
+
+      // Click => explode to pixies and respawn later
+      el.addEventListener('pointerdown', (ev) => {
+        ev.preventDefault();
+        explodeToPixies(el);
+        // Mark as removed and schedule respawn
+        el.style.pointerEvents = 'none';
+        el.style.opacity = '0';
+        setTimeout(() => {
+          // Re-randomize and re-enable
+          b.x = -60; b.yMid = rand(60, vh-80);
+          b.speed = rand(0.6, 1.6); b.amp = rand(18, 60); b.phase = rand(0, Math.PI*2);
+          el.style.opacity = '1';
+          el.style.pointerEvents = 'auto';
+        }, 600);
+      }, { passive: false });
+
+      butterflies.push(b);
+    }
+
+    function explodeToPixies(sourceEl) {
+      const rect = sourceEl.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top  + rect.height/2;
+
+      for (let i = 0; i < PIXIES_PER_BURST; i++) {
+        const p = document.createElement('div');
+        p.className = 'pixie';
+        const angle = rand(0, Math.PI * 2);
+        const dist  = rand(40, 160);
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+        const rz = rand(-90, 90);
+        const delay = Math.floor(rand(0, 120));
+        p.style.left = cx + 'px';
+        p.style.top  = cy + 'px';
+        p.style.setProperty('--dx', dx.toFixed(1) + 'px');
+        p.style.setProperty('--dy', dy.toFixed(1) + 'px');
+        p.style.setProperty('--rz', rz.toFixed(1) + 'deg');
+        p.style.setProperty('--delay', delay + 'ms');
+        document.body.appendChild(p);
+        p.addEventListener('animationend', () => p.remove());
+      }
+    }
+
+    function animate() {
+      for (const b of butterflies) {
+        // Update position
+        b.x += b.speed;
+        const y = b.yMid + Math.sin((b.x + b.phase) * 0.03) * b.amp;
+        const tilt = Math.sin((b.x + b.phase) * 0.03) * b.tiltAmt;
+        b.el.style.transform = `translate(${b.x}px, ${y}px) rotate(${tilt}deg)`;
+
+        // Wrap around
+        if (b.x > vw + 60) {
+          b.x = -60; b.yMid = rand(60, vh - 80);
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function init() {
+      for (let i = 0; i < BUTTERFLY_COUNT; i++) makeButterfly();
+      animate();
+    }
+
+    window.addEventListener('resize', () => {
+      vw = window.innerWidth; vh = window.innerHeight;
+    });
+
+    init();
+  </script>
+</body>
+</html>
